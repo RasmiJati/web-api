@@ -8,10 +8,13 @@ namespace WebApi.Controllers
         public class HomeController : Controller
         {
             private readonly ILogger<HomeController> _logger;
+            private readonly IConfiguration _iconfiguration;
+      
 
-            public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger , IConfiguration iconfiguration)
             {
                 _logger = logger;
+                _iconfiguration = iconfiguration;
             }
 
             public IActionResult Index()
@@ -22,7 +25,8 @@ namespace WebApi.Controllers
             public async Task<IActionResult> GetCountry()
             {
                 HttpClient client = new HttpClient();
-                using HttpResponseMessage response = await client.GetAsync("https://restcountries.com/v3.1/all");
+                string strTestUrl = _iconfiguration.GetSection("ApiUrls").GetSection("CountryUrls").Value;
+                using HttpResponseMessage response = await client.GetAsync(strTestUrl);
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
                 var data = JsonConvert.DeserializeObject<List<Country>>(responseBody);
