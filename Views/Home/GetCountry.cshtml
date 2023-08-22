@@ -1,0 +1,48 @@
+﻿@model List<Country>
+@{
+    ViewData["Title"] = "Index";                
+}
+<div class ="container p-3">
+    <div class=" row pt-4">
+        <div class = "col-6">
+            <h2 class=" text-primary">
+                Country List</h2>
+        </div>
+    </div>
+    <br/> <br />
+
+</div>
+
+<table class="table table-bordered table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>Common Name  / (Official Name)</th>
+            <th>Flags</th>
+            <th>Region</th>
+            <th>Continents</th>
+            <th>Capital</th>
+            <th>Language</th>
+            <th>Currency</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(Country obj in Model){
+            <tr>
+               <td>@obj.name.common  /  ( @obj.name.official)</td>
+                <td><img src="@obj.flags.png" alt="flag" width="50" height="30"></td>
+                <td>@obj.region</td>
+                <td>@string.Join(", ", obj.continents.Where(c => !string.IsNullOrWhiteSpace(c)))</td>
+                @if (obj.capital != null && obj.capital.Length > 0)
+                {
+                    <td>@string.Join(", ", obj.capital.Where(c => !string.IsNullOrWhiteSpace(c)))</td>
+                }
+                else
+                {
+                    <td>N/A</td>
+                }
+                <td>@obj.languages</td>
+               <td>@obj.currencies</td>
+            </tr>
+        }
+    </tbody>
+</table>
