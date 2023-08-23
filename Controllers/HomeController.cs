@@ -8,29 +8,23 @@ namespace WebApi.Controllers
         public class HomeController : Controller
         {
             private readonly ILogger<HomeController> _logger;
-            private readonly IConfiguration _iconfiguration;
-      
+            private readonly ISingletonHttp _isingletonhttp;
 
-        public HomeController(ILogger<HomeController> logger , IConfiguration iconfiguration)
-            {
-                _logger = logger;
-                _iconfiguration = iconfiguration;
-            }
+        public HomeController(ILogger<HomeController> logger, ISingletonHttp isingetonhttp)
+        {
+            _logger = logger;
+            _isingletonhttp = isingetonhttp;
+        }
 
-            public IActionResult Index()
+        public IActionResult Index()
             {
                 return View();
             }
 
             public async Task<IActionResult> GetCountry()
             {
-                HttpClient client = new HttpClient();
-                string strTestUrl = _iconfiguration.GetSection("ApiUrls").GetSection("CountryUrls").Value;
-                using HttpResponseMessage response = await client.GetAsync(strTestUrl);
-                response.EnsureSuccessStatusCode();
-                string responseBody = await response.Content.ReadAsStringAsync();
-                var data = JsonConvert.DeserializeObject<List<Country>>(responseBody);
-                return View(data);
+                var response = await _isingletonhttp.GetServices();
+                return View(response);
             }
 
             [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

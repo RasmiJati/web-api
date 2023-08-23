@@ -1,3 +1,5 @@
+using WebApi.Models;
+
 namespace WebApi
 {
     public class Program
@@ -8,7 +10,8 @@ namespace WebApi
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddHttpClient();
+            builder.Services.AddSingleton<ISingletonHttp, SingletonHttp>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
